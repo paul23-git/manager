@@ -1,0 +1,12 @@
+FROM node:14-alpine
+RUN apk update
+RUN apk upgrade
+RUN apk add rsync
+RUN apk add git less openssh
+
+RUN mkdir /javascript
+WORKDIR /javascript
+
+RUN npm install flow-remove-types -g
+
+ENTRYPOINT rm -rf node_modules && chown -R node:node . && npm i && echo build install success && npm run build && rm -rf node_modules && cd build && rm -rf node_modules && echo build complete  && npm ci --silent --only=production && echo production install success

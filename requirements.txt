@@ -1,0 +1,5 @@
+argdown==0.0.1
+pystache==0.6.0
+PyYAML==5.4.1
+sh==1.14.2
+tabulate==0.8.9

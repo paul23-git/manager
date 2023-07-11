@@ -1,0 +1,23 @@
+FROM node:18-alpine
+RUN apk update
+RUN apk upgrade
+RUN apk add rsync
+RUN apk add git less openssh
+RUN apk add python3
+RUN apk add make gcc g++
+RUN apk upgrade
+
+
+RUN mkdir /javascript
+WORKDIR /javascript
+
+
+RUN npm install flow-remove-types -g
+
+COPY --chown=node:node local/ssh/ /root/.ssh/
+COPY --chown=node:node local/ssh/ /home/node/.ssh/
+RUN chmod 400 /root/.ssh/id_rsa
+RUN chmod 400 /home/node/.ssh/id_rsa
+RUN chmod 777 -R /root/
+
+ENTRYPOINT echo building from alpine && rm -rf node_modules  && chown -R node:node "/root/.npm" && chown -R node:node . && npm install --legacy-peer-deps --silent && echo build install success && npm run build && rm -rf node_modules && cd build && echo build complete  && npm ci --legacy-peer-deps --silent --only=production && echo production install success

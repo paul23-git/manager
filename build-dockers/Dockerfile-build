@@ -1,0 +1,26 @@
+FROM node:18
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install -qq rsync
+RUN apt-get install -qq  git
+RUN apt-get install -qq less
+# RUN apt-get install -qq openssh
+RUN apt-get install -qq  python3
+RUN apt-get install -qq  make gcc g++
+RUN apt-get upgrade -y
+
+
+RUN mkdir /javascript
+WORKDIR /javascript
+
+
+RUN npm install flow-remove-types -g
+
+COPY --chown=node:node local/ssh/ /root/.ssh/
+COPY --chown=node:node local/ssh/ /home/node/.ssh/
+RUN chmod 400 /root/.ssh/id_rsa
+RUN chmod 400 /home/node/.ssh/id_rsa
+RUN chmod 777 -R /root/
+
+ENTRYPOINT echo building from ubuntu &&  rm -rf node_modules  && chown -R node:node "/root/.npm" && chown -R node:node . && npm install --legacy-peer-deps --silent && echo build install success && npm run build && rm -rf node_modules && cd build && echo build complete  && npm ci --legacy-peer-deps --silent --omit=dev && echo production install success

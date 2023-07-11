@@ -1,0 +1,18 @@
+FROM node:18-alpine3.17
+RUN apk update
+RUN apk upgrade
+RUN mkdir /njs
+
+#ENV GIT_USERNAME="" GIT_PASSWORD="" GIT_SERVER="" GIT_BRANCH=""
+ENV NODE_ENV=""
+ENV NODE_TLS_REJECT_UNAUTHORIZED="0"
+ENV ROOTROLE="rootAdmin" ROOT_KEY="" DISABLE_AUTHENTICATION="false"
+ENV WEBHOST="" STATICHOST="" TESTMAIL="" DATA_DIRECTORY="/data/"
+
+EXPOSE 1337
+
+COPY javascript/build/ /njs/
+
+WORKDIR /njs/
+ENTRYPOINT ["npm"]
+CMD ["start"]
